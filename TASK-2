@@ -1,5 +1,5 @@
 # Hill Climbing Algorithm
-# Treasure Hunt Game
+
 
 grid = [
     [2, 4, 7, 5, 3],
