@@ -1,0 +1,109 @@
+# Monkey Banana Problem using Goal Stack Planning
+
+initial_state = {
+    'on_floor(Monkey)',
+    'at(Monkey, Window)',
+    'at(Box, Window)'
+}
+
+goal = {'has(Monkey, Banana)'}
+
+operators = {
+    'Push(Box, Window, Center)': {
+        'preconds': {
+            'on_floor(Monkey)',
+            'at(Monkey, Window)',
+            'at(Box, Window)'
+        },
+        'add': {
+            'at(Monkey, Center)',
+            'at(Box, Center)'
+        },
+        'del': {
+            'at(Monkey, Window)',
+            'at(Box, Window)'
+        }
+    },
+
+    'Climb(Box)': {
+        'preconds': {
+            'on_floor(Monkey)',
+            'at(Monkey, Center)',
+            'at(Box, Center)'
+        },
+        'add': {
+            'on_box(Monkey)'
+        },
+        'del': {
+            'on_floor(Monkey)'
+        }
+    },
+
+    'Grasp(Banana)': {
+        'preconds': {
+            'on_box(Monkey)',
+            'at(Monkey, Center)',
+            'at(Box, Center)'
+        },
+        'add': {
+            'has(Monkey, Banana)'
+        },
+        'del': set()
+    }
+}
+
+def apply_operator(state, operator):
+    state = state.copy()
+
+    for condition in operators[operator]['del']:
+        state.discard(condition)
+
+    for condition in operators[operator]['add']:
+        state.add(condition)
+
+    return state
+
+
+state = initial_state.copy()
+
+plan = [
+    'Push(Box, Window, Center)',
+    'Climb(Box)',
+    'Grasp(Banana)'
+]
+
+print("Initial State:")
+for item in state:
+    print(item)
+
+print("\nPlan:")
+
+for step in plan:
+    print(step)
+    state = apply_operator(state, step)
+
+print("\nFinal State:")
+for item in state:
+    print(item)
+
+if 'has(Monkey, Banana)' in state:
+    print("\nGoal Achieved: Monkey has the Banana")
+
+OUTPUT:
+Initial State:
+on_floor(Monkey)
+at(Monkey, Window)
+at(Box, Window)
+
+Plan:
+Push(Box, Window, Center)
+Climb(Box)
+Grasp(Banana)
+
+Final State:
+on_box(Monkey)
+at(Monkey, Center)
+has(Monkey, Banana)
+at(Box, Center)
+
+Goal Achieved: Monkey has the Banana
